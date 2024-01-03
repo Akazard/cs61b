@@ -25,7 +25,36 @@ public class NBody {
         String filename = scanner.next();
         double radius = readRadius(filename);
         Planet[] Planets = readPlanets(filename);
-        
+        StdDraw.setXscale(-2.50e+11, 2.50e+11);
+        StdDraw.setYscale(-2.50e+11, 2.50e+11);
+        StdDraw.enableDoubleBuffering();
+        StdDraw.clear();
+        StdDraw.picture(0, 0, "images/starfield.jpg");
+        StdDraw.show();
+        for (int i = 0; i < Planets.length; i++){
+            Planets[i].draw();
+        }
+        StdDraw.show();
+        double timestep = 0;
+        double[] xForces = new double[Planets.length];
+        double[] yForces = new double[Planets.length];
+        while(timestep <= T){
+            for(int i = 0; i < Planets.length; i++){
+                xForces[i] = Planets[i].calcNetForceExertedByX(Planets);
+                yForces[i] = Planets[i].calcNetForceExertedByY(Planets);
+            }
+            for(int i = 0; i < Planets.length; i++){
+                Planets[i].update(dt, xForces[i], yForces[i]);
+            }
+            StdDraw.clear();
+            StdDraw.picture(0, 0, "images/starfield.jpg");
+            for (int i = 0; i < Planets.length; i++){
+            Planets[i].draw();
+            }
+            StdDraw.show();
+            StdDraw.pause(10);
+            timestep += dt;
+        }
         scanner.close();
     }
 }
